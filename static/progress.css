@@ -1,0 +1,8 @@
+.track-progress {
+  margin: 0 0 7px;
+  color: var(--accent);
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

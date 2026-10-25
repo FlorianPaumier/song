@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+.pytest_cache/
+/data
+.env
+*.pyc
+
+# Local files excluded from publication
+.DS_Store
+.idea/
+.remember/
+.env.*
+!.env.example
+!.env.*.example
+*.egg-info/

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Song Studio · Local</title>
+  <link rel="stylesheet" href="/static/styles.css?v=3">
+  <link rel="stylesheet" href="/static/progress.css?v=3">
+  <link rel="stylesheet" href="/static/vocal-mode.css?v=3">
+  <link rel="stylesheet" href="/static/library-page.css?v=4">
+  <link rel="stylesheet" href="/static/fixes.css?v=16">
+  <script src="/static/app.js?v=20" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="brand-mark">◧</span><span>SONG STUDIO<small>LOCAL</small></span></div>
+    <div class="top-actions"><a id="library-link" class="header-link" href="/?view=all">Tous les morceaux</a><span id="connection" class="connection">Vérification…</span><button id="notify-toggle" class="icon-button" title="Activer les notifications de fin de lot" aria-label="Activer les notifications">♧</button><button id="theme-toggle" class="icon-button" title="Changer le thème" aria-label="Changer le thème">◐</button></div>
+  </header>
+  <nav class="mobile-nav" aria-label="Sections"><button class="active" data-panel="create">Créer</button><button data-panel="library">Bibliothèque</button></nav>
+  <main class="workspace">
+    <section id="create-panel" class="create-panel panel">
+      <div class="section-heading"><div><span class="eyebrow">01 / COMPOSER</span><h1>Créer une chanson</h1></div></div>
+      <form id="create-form">
+        <label for="description">Description musicale <span class="required">*</span></label>
+        <textarea id="description" name="description" rows="5" required minlength="3" maxlength="2000" placeholder="Power metal épique, 200 BPM, guitares rapides, batterie puissante, voix claire, refrain fédérateur…"></textarea>
+        <p class="help">Décris le style, l’énergie, la voix et le tempo. Un « 200 BPM » sera transmis automatiquement.</p>
+        <details class="more-settings"><summary>Réglages</summary><div class="settings-grid">
+          <div><label for="title">Titre de base</label><input id="title" maxlength="120" placeholder="Automatique"></div>
+          <div id="normal-duration-block"><label for="duration">Durée visée</label><select id="duration"><option value="150">2:30</option><option value="180">3:00</option><option value="210" selected>3:30</option><option value="240">4:00</option></select></div>
+          <label id="long-mode-option" class="cover-option settings-wide" hidden><input id="long-mode" type="checkbox"><span><strong>Format long instrumental</strong><small>Mix continu assemblé automatiquement</small></span></label>
+          <div id="long-settings" class="settings-wide long-settings" hidden><div><label for="long-duration">Durée finale</label><select id="long-duration"><option value="1800">30 minutes</option><option value="3600" selected>1 heure</option><option value="7200">2 heures</option></select></div><div><label for="long-evolution">Évolution</label><select id="long-evolution"><option value="stable">Stable</option><option value="progressive">Progressive</option><option value="energetic">Énergique</option></select></div><p class="help">Instrumental uniquement. Le mix sera produit par segments d’environ 5 minutes.</p></div>
+          <fieldset id="vocal-mode-block" class="vocal-mode settings-wide"><legend>Mode vocal</legend><div class="mode-row">
+            <label><input type="radio" name="vocal_mode" value="instrumental" checked><span>Instrumental<small>Aucune voix</small></span></label>
+            <label><input type="radio" name="vocal_mode" value="auto"><span>Automatiques<small>ACE-Step écrit</small></span></label>
+            <label><input type="radio" name="vocal_mode" value="provided"><span>Mes paroles<small>Texte fourni</small></span></label>
+          </div></fieldset>
+          <div id="language-block" class="settings-wide"><label for="lyric-language">Langue des paroles</label><select id="lyric-language" disabled>
+            <option value="en" selected>English</option><option value="fr">Français</option><option value="de">Deutsch</option>
+            <option value="es">Español</option><option value="it">Italiano</option><option value="pt">Português</option>
+          </select><p class="help">Appliquée à toutes les variations du lot.</p></div>
+          <div class="settings-wide"><label for="negative-prompt">Exclusions <span class="optional">automatiques si vide</span></label>
+            <textarea id="negative-prompt" rows="3" maxlength="1000" placeholder="Voix indésirable, mix brouillon, clipping…"></textarea>
+            <p class="help">Éléments qu’ACE-Step doit éviter. Le réglage automatique dépend du mode vocal et de la langue.</p>
+          </div>
+          <label class="cover-option settings-wide"><input id="generate-covers" type="checkbox"><span><strong>Pochette automatique</strong><small>Une image carrée par morceau, générée après toute la file audio</small></span></label>
+        </div></details>
+        <div id="lyrics-block" hidden><label for="lyrics">Paroles</label>
+        <textarea id="lyrics" name="lyrics" rows="8" maxlength="12000" placeholder="[Verse 1]&#10;…&#10;&#10;[Chorus]&#10;…&#10;&#10;[Bridge]&#10;…"></textarea>
+        <p class="help">Verse, Chorus, Bridge, Outro et les répétitions sont reconnus.</p></div>
+        <div id="batch-controls" class="batch-controls"><div><label for="count">Variations à mettre en file</label><div class="count-row"><button type="button" class="count-choice active" data-count="2">2</button><button type="button" class="count-choice" data-count="10">10</button><input id="count" type="number" min="1" max="500" value="2" aria-label="Nombre de variations"></div></div></div>
+        <div id="preview" class="preview" aria-live="polite">Renseigne une description pour commencer.</div>
+        <button id="create-button" class="primary-button" type="submit">Ajouter 2 chansons à la file <span>↗</span></button>
+        <p class="help footnote">Génération locale, une chanson à la fois. Le formulaire reste disponible pendant le traitement.</p>
+      </form>
+    </section>
+    <section id="library-panel" class="library-panel panel">
+      <div class="section-heading"><div><span class="eyebrow">02 / ÉCOUTER</span><h2 id="library-title">Morceaux récents</h2></div><div class="library-count"><label id="recent-limit-label">Afficher <select id="recent-limit"><option value="10" selected>10</option><option value="20">20</option></select></label><span id="track-total" class="count-badge">0 sons</span></div></div>
+      <div class="library-toolbar"><label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Rechercher un son, un style, des paroles…" aria-label="Rechercher dans la bibliothèque"></label><button id="favorites-filter" class="filter-button" type="button" aria-pressed="false">☆ Favoris</button><label id="group-batches-option" class="group-option" hidden><input id="group-batches" type="checkbox" checked><span>Grouper les lots</span></label></div>
+      <div id="bulk-actions" class="bulk-actions" hidden><button id="select-page" type="button">Tout sélectionner sur cette page</button><span id="selected-count">0 sélection</span><select id="bulk-format" aria-label="Format du téléchargement groupé"><option value="mp3">MP3 RouteNote</option><option value="flac">FLAC RouteNote</option><option value="both">MP3 + FLAC</option></select><button id="download-selected" type="button" disabled>Télécharger ZIP</button><button id="delete-selected" type="button" disabled>Supprimer la sélection</button></div>
+      <div class="queue-bar"><div><span class="eyebrow">FILE D’ATTENTE</span><p id="queue-summary">Aucune chanson en attente</p></div><div class="queue-actions"><button id="pause-queue" type="button">Pause</button><button id="cancel-queue" type="button" title="Annuler les chansons en attente">Annuler l’attente</button></div></div>
+      <section id="long-projects-section" class="long-projects-section" hidden><span class="eyebrow">FORMATS LONGS</span><div id="long-projects" class="long-projects"></div></section>
+      <div id="tracks" class="tracks" aria-live="polite"></div>
+      <nav id="pagination" class="pagination" aria-label="Pagination" hidden><button id="previous-page" type="button">← Précédent</button><span id="page-label">Page 1</span><button id="next-page" type="button">Suivant →</button></nav>
+    </section>
+  </main>
+  <footer class="player"><div id="player-track" class="player-track"><span class="cover-mini">♪</span><div><strong>Aucun son sélectionné</strong><small>Sélectionne une chanson terminée</small></div></div><audio id="audio-player" controls preload="none" aria-label="Lecteur audio"></audio><div id="player-actions" class="player-actions"></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="action-dialog" class="action-dialog"><form method="dialog"><h3 id="dialog-title">Confirmer</h3><p id="dialog-message"></p><label id="dialog-input-wrap" for="dialog-input" hidden>Nouveau titre<input id="dialog-input" maxlength="120"></label><div class="dialog-actions"><button value="cancel" type="submit" formnovalidate>Annuler</button><button id="dialog-confirm" value="confirm" type="submit">Confirmer</button></div></form></dialog>
+  <dialog id="batch-dialog" class="batch-dialog"><form method="dialog"><div class="batch-dialog-head"><div><span class="eyebrow">DÉTAILS DU LOT</span><h3 id="batch-dialog-title"></h3></div><button value="close" aria-label="Fermer">×</button></div><p id="batch-dialog-description" class="batch-dialog-description"></p><dl id="batch-dialog-stats" class="batch-dialog-stats"></dl><div id="batch-dialog-statuses" class="batch-dialog-statuses"></div></form></dialog>
+</body>
+</html>
